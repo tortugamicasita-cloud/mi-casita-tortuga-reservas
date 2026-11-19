@@ -21,6 +21,19 @@
       --text: #143635;
       --muted: #4b6b69;
       --border: #bfe3de;
+
+      /* Colores de bloqueo por espacio */
+      --block-carey-bg: #fef08a;     /* Amarillo pastel */
+      --block-carey-border: #eab308;
+      --block-carey-text: #713f12;
+
+      --block-galapagos-bg: #99f6e4; /* Turquesa pastel */
+      --block-galapagos-border: #14b8a6;
+      --block-galapagos-text: #134e4a;
+
+      --block-posada-bg: #6b7280;    /* Gris */
+      --block-posada-border: #374151;
+      --block-posada-text: #ffffff;
     }
 
     * { box-sizing: border-box; }
@@ -208,37 +221,66 @@
       line-height: 1.35;
     }
 
-    .calendar-legend {
+    .calendar-legend-top {
       display: flex;
-      align-items: center;
-      gap: 14px;
+      flex-direction: column;
+      gap: 6px;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
       font-size: 0.8rem;
       font-weight: 700;
-      color: var(--muted);
-      margin: -8px 0 14px;
+      color: var(--text);
     }
 
-    .legend-item {
-      display: inline-flex;
+    .legend-row {
+      display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      line-height: 1.3;
     }
 
-    .legend-box {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
+    .legend-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
       display: inline-block;
+      flex-shrink: 0;
     }
 
-    .legend-occupied {
-      background-color: #4b5563;
-      border: 1px solid #374151;
+    .dot-carey {
+      background-color: var(--block-carey-bg);
+      border: 1.5px solid var(--block-carey-border);
     }
 
-    .legend-available {
-      background-color: #ffffff;
-      border: 1.5px solid var(--teal-ink);
+    .dot-galapagos {
+      background-color: var(--block-galapagos-bg);
+      border: 1.5px solid var(--block-galapagos-border);
+    }
+
+    .dot-posada {
+      background-color: var(--block-posada-bg);
+      border: 1.5px solid var(--block-posada-border);
+    }
+
+    .selection-alert {
+      display: none;
+      margin-top: -8px;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--coral-soft);
+      border: 1.5px solid var(--coral);
+      color: #9e3d36;
+      font-size: 0.84rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .selection-alert.visible {
+      display: block;
     }
 
     .summary {
@@ -267,7 +309,6 @@
       color: var(--text);
     }
 
-    /* Bloque de selección única de método de pago */
     .payment-box {
       display: none;
       background: #ffffff;
@@ -330,7 +371,6 @@
       color: var(--teal-deep);
     }
 
-    /* Botón CTA: gris deshabilitado -> color títulos (--teal-ink #0d6e6a) con texto blanco al completar */
     .btn-wa {
       width: 100%;
       padding: 15px 18px;
@@ -375,7 +415,7 @@
       font-weight: 700;
     }
 
-    /* Pulido UI de Flatpickr para evitar solapamiento de círculos y líneas */
+    /* Flatpickr styling */
     .flatpickr-calendar {
       border-radius: 20px !important;
       border: 2px solid var(--border) !important;
@@ -428,13 +468,13 @@
       transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
     }
 
-    .flatpickr-day:hover:not(.flatpickr-disabled):not(.booked-day) {
+    .flatpickr-day:hover:not(.flatpickr-disabled):not(.blocked-day) {
       background: var(--aqua-soft) !important;
       border-color: var(--aqua) !important;
       color: var(--teal-deep) !important;
     }
 
-    .flatpickr-day.today:not(.selected):not(.booked-day):not(.flatpickr-disabled) {
+    .flatpickr-day.today:not(.selected):not(.blocked-day):not(.flatpickr-disabled) {
       border-color: var(--teal-ink) !important;
       color: var(--teal-ink) !important;
     }
@@ -457,7 +497,6 @@
       box-shadow: none !important;
     }
 
-    /* Días pasados (anteriores a hoy) */
     .flatpickr-day.prevMonthDay.flatpickr-disabled,
     .flatpickr-day.nextMonthDay.flatpickr-disabled,
     .flatpickr-day.flatpickr-disabled {
@@ -467,17 +506,38 @@
       cursor: not-allowed !important;
     }
 
-    /* Fechas ocupadas / reservadas en gris oscuro opaco bien separado */
-    .flatpickr-day.booked-day,
-    .flatpickr-day.booked-day.flatpickr-disabled,
-    .flatpickr-day.booked-day:hover {
-      background-color: #4b5563 !important;
-      border-color: #374151 !important;
-      color: #f9fafb !important;
-      opacity: 0.92 !important;
+    /* Estados visuales de bloqueo en el calendario */
+    .flatpickr-day.block-carey,
+    .flatpickr-day.block-carey:hover {
+      background-color: var(--block-carey-bg) !important;
+      border-color: var(--block-carey-border) !important;
+      color: var(--block-carey-text) !important;
+      font-weight: 700 !important;
+      border-radius: 50% !important;
+    }
+
+    .flatpickr-day.block-galapagos,
+    .flatpickr-day.block-galapagos:hover {
+      background-color: var(--block-galapagos-bg) !important;
+      border-color: var(--block-galapagos-border) !important;
+      color: var(--block-galapagos-text) !important;
+      font-weight: 700 !important;
+      border-radius: 50% !important;
+    }
+
+    .flatpickr-day.block-both-cabs,
+    .flatpickr-day.block-both-cabs:hover,
+    .flatpickr-day.block-posada,
+    .flatpickr-day.block-posada:hover {
+      background-color: var(--block-posada-bg) !important;
+      border-color: var(--block-posada-border) !important;
+      color: var(--block-posada-text) !important;
       text-decoration: line-through !important;
       font-weight: 700 !important;
       border-radius: 50% !important;
+    }
+
+    .flatpickr-day.blocked-for-selection {
       cursor: not-allowed !important;
     }
   </style>
@@ -523,11 +583,24 @@
         </div>
 
         <label for="dateRange">2. Selecciona tus fechas, elige el día en que llegas y el día en que te vas</label>
-        <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
-        <div class="calendar-legend">
-          <span class="legend-item"><span class="legend-box legend-available"></span> Disponible</span>
-          <span class="legend-item"><span class="legend-box legend-occupied"></span> Ocupado (no disponible)</span>
+
+        <div class="calendar-legend-top" aria-label="Leyenda de días bloqueados">
+          <div class="legend-row">
+            <span class="legend-dot dot-carey"></span>
+            <span>Días bloqueados Cabaña Carey</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-dot dot-galapagos"></span>
+            <span>Días bloqueados Cabaña Galápagos</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-dot dot-posada"></span>
+            <span>Días bloqueados toda la posada</span>
+          </div>
         </div>
+
+        <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
+        <div class="selection-alert" id="selectionAlert"></div>
 
         <label for="guestName">3. Tu nombre</label>
         <input type="text" id="guestName" placeholder="Ej. María Pérez" />
@@ -617,25 +690,87 @@
       return `${y}-${m}-${d}`;
     }
 
-    function buildDisabledRanges(ranges) {
-      return ranges.map(r => {
-        const startDate = parseLocalDate(r.start);
-        const endDate = parseLocalDate(r.end || r.start);
-        return { from: formatLocalDate(startDate), to: formatLocalDate(endDate) };
+    function isDateInRanges(dateObj, ranges) {
+      const target = formatLocalDate(dateObj);
+      return (ranges || []).some(r => {
+        const startStr = formatLocalDate(parseLocalDate(r.start));
+        const endStr = formatLocalDate(parseLocalDate(r.end || r.start));
+        return target >= startStr && target <= endStr;
       });
     }
 
-    function isDateInBookedRanges(dateObj, disabledRanges) {
-      const target = formatLocalDate(dateObj);
-      return disabledRanges.some(range => target >= range.from && target <= range.to);
+    function getDayBlockState(dateObj) {
+      const hasCarey = isDateInRanges(dateObj, bookedData.carey);
+      const hasGalapagos = isDateInRanges(dateObj, bookedData.galapagos);
+      const hasPosada = isDateInRanges(dateObj, bookedData.posada);
+
+      if (hasPosada) {
+        return { state: 'posada', hasCarey, hasGalapagos, hasPosada };
+      }
+      if (hasCarey && hasGalapagos) {
+        return { state: 'both-cabs', hasCarey, hasGalapagos, hasPosada };
+      }
+      if (hasCarey) {
+        return { state: 'carey', hasCarey, hasGalapagos, hasPosada };
+      }
+      if (hasGalapagos) {
+        return { state: 'galapagos', hasCarey, hasGalapagos, hasPosada };
+      }
+      return { state: 'free', hasCarey: false, hasGalapagos: false, hasPosada: false };
+    }
+
+    // Determina si un día está bloqueado para la opción seleccionada en el paso 1
+    function isBlockedForCurrentOption(dateObj) {
+      if (!currentOption) return true;
+      const info = getDayBlockState(dateObj);
+
+      if (info.hasPosada) return true; // Toda la posada bloqueada
+
+      if (currentOption.key === 'galapagos') {
+        return info.hasGalapagos;
+      }
+      if (currentOption.key === 'carey') {
+        return info.hasCarey;
+      }
+      if (currentOption.key === 'posada') {
+        // Para posada completa (hasta 10 personas), si alguna de las cabañas está bloqueada, no está disponible toda la posada
+        return info.hasCarey || info.hasGalapagos;
+      }
+      return false;
+    }
+
+    function showSelectionAlert(msg) {
+      const el = document.getElementById('selectionAlert');
+      if (!msg) {
+        el.textContent = '';
+        el.classList.remove('visible');
+        return;
+      }
+      el.textContent = msg;
+      el.classList.add('visible');
+    }
+
+    // Verifica si el rango completo (noches entre check-in y check-out) está libre para la opción elegida
+    function isRangeAvailableForCurrentOption(d1, d2) {
+      if (!d1 || !d2 || !currentOption) return false;
+      const start = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+      const end = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+      const nights = Math.round((end - start) / 86400000);
+      if (nights <= 0) return false;
+
+      // Revisamos cada noche de la estadía (desde start hasta end - 1 día)
+      for (let i = 0; i < nights; i++) {
+        const cur = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+        if (isBlockedForCurrentOption(cur)) {
+          return false;
+        }
+      }
+      return true;
     }
 
     function hasValidNights() {
       if (selectedDates.length < 2) return false;
-      const [d1, d2] = selectedDates;
-      const t1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
-      const t2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
-      return Math.round((t2 - t1) / 86400000) > 0;
+      return isRangeAvailableForCurrentOption(selectedDates[0], selectedDates[1]);
     }
 
     function evaluateFormState() {
@@ -691,24 +826,81 @@
 
       if (picker) picker.destroy();
       selectedDates = [];
+      showSelectionAlert('');
       updateSummary();
 
-      const disabledRanges = buildDisabledRanges(bookedData[currentOption.key] || []);
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
 
       picker = flatpickr('#dateRange', {
         mode: 'range',
         minDate: 'today',
         locale: 'es',
         dateFormat: 'Y-m-d',
-        disable: disabledRanges,
         onDayCreate: function(dObj, dStr, fp, dayElem) {
-          if (dayElem.dateObj && isDateInBookedRanges(dayElem.dateObj, disabledRanges)) {
-            dayElem.classList.add('booked-day');
-            dayElem.title = 'Fecha ocupada (no disponible)';
+          const dt = dayElem.dateObj;
+          if (!dt) return;
+
+          const dayOnly = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+          if (dayOnly < todayStart) return;
+
+          const info = getDayBlockState(dt);
+          const blockedForMe = isBlockedForCurrentOption(dt);
+
+          if (info.state === 'posada') {
+            dayElem.classList.add('block-posada', 'blocked-for-selection');
+            dayElem.title = 'Bloqueado: toda la posada';
+          } else if (info.state === 'both-cabs') {
+            dayElem.classList.add('block-both-cabs', 'blocked-for-selection');
+            dayElem.title = 'Bloqueado: ambas cabañas ocupadas (toda la posada no disponible)';
+          } else if (info.state === 'carey') {
+            dayElem.classList.add('block-carey');
+            if (blockedForMe) {
+              dayElem.classList.add('blocked-for-selection');
+              dayElem.title = 'Bloqueado para Cabaña Carey / Posada Completa';
+            } else {
+              dayElem.title = 'Cabaña Carey bloqueada — Cabaña Galápagos disponible';
+            }
+          } else if (info.state === 'galapagos') {
+            dayElem.classList.add('block-galapagos');
+            if (blockedForMe) {
+              dayElem.classList.add('blocked-for-selection');
+              dayElem.title = 'Bloqueado para Cabaña Galápagos / Posada Completa';
+            } else {
+              dayElem.title = 'Cabaña Galápagos bloqueada — Cabaña Carey disponible';
+            }
           }
         },
-        onChange: function(dates) {
-          selectedDates = dates;
+        onChange: function(dates, dateStr, fp) {
+          showSelectionAlert('');
+
+          if (dates.length === 1) {
+            if (isBlockedForCurrentOption(dates[0])) {
+              fp.clear();
+              selectedDates = [];
+              showSelectionAlert('Ese día está bloqueado para ' + currentOption.title + '. Elige otro día disponible.');
+              updateSummary();
+              return;
+            }
+            selectedDates = dates;
+            updateSummary();
+            return;
+          }
+
+          if (dates.length === 2) {
+            if (!isRangeAvailableForCurrentOption(dates[0], dates[1])) {
+              fp.clear();
+              selectedDates = [];
+              showSelectionAlert('Hay al menos una noche bloqueada dentro del rango seleccionado para ' + currentOption.title + '. Elige otro rango disponible.');
+              updateSummary();
+              return;
+            }
+            selectedDates = dates;
+            updateSummary();
+            return;
+          }
+
+          selectedDates = [];
           updateSummary();
         }
       });
@@ -720,7 +912,11 @@
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         if (data.error) throw new Error(data.error);
-        bookedData = data;
+        bookedData = {
+          galapagos: Array.isArray(data.galapagos) ? data.galapagos : [],
+          carey: Array.isArray(data.carey) ? data.carey : [],
+          posada: Array.isArray(data.posada) ? data.posada : []
+        };
         if (currentOption) {
           renderCalendarForOption();
         }
