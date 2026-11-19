@@ -245,7 +245,7 @@
       border-radius: 16px;
       font-size: 0.94rem;
       line-height: 1.55;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       color: var(--text);
     }
 
@@ -264,23 +264,94 @@
       color: var(--text);
     }
 
+    /* Bloque de selección única de método de pago */
+    .payment-box {
+      display: none;
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .payment-box.visible {
+      display: block;
+    }
+
+    .payment-box-title {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      color: var(--teal-ink);
+      font-size: 1rem;
+      margin: 0 0 10px;
+    }
+
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--cream);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text);
+      transition: all 0.15s ease;
+      margin-bottom: 0;
+    }
+
+    .payment-option:hover {
+      border-color: var(--teal-ink);
+      background: var(--aqua-soft);
+    }
+
+    .payment-option input[type="radio"] {
+      accent-color: var(--teal-ink);
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .payment-option.selected {
+      border-color: var(--teal-ink);
+      background: var(--aqua-soft);
+      color: var(--teal-deep);
+    }
+
+    /* Botón CTA deshabilitado vs habilitado en verde */
     .btn-wa {
       width: 100%;
       padding: 15px 18px;
       border: none;
       border-radius: 16px;
-      background: var(--whatsapp);
-      color: #072914;
+      background: #d1d5db;
+      color: #6b7280;
       font-family: 'Fredoka', sans-serif;
       font-weight: 700;
       font-size: 1.08rem;
-      cursor: pointer;
-      box-shadow: 0 6px 0 #189e49;
-      transition: transform 0.1s, filter 0.15s;
+      cursor: not-allowed;
+      box-shadow: 0 4px 0 #9ca3af;
+      transition: transform 0.1s, background-color 0.2s, color 0.2s, box-shadow 0.2s;
     }
 
-    .btn-wa:hover { filter: brightness(1.03); }
-    .btn-wa:active { transform: translateY(3px); box-shadow: 0 3px 0 #189e49; }
+    .btn-wa.ready {
+      background: var(--whatsapp);
+      color: #072914;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #189e49;
+    }
+
+    .btn-wa.ready:hover { filter: brightness(1.03); }
+    .btn-wa.ready:active { transform: translateY(3px); box-shadow: 0 3px 0 #189e49; }
 
     .footer-note {
       margin-top: 16px;
@@ -290,47 +361,109 @@
       font-weight: 700;
     }
 
+    /* Pulido UI de Flatpickr para evitar solapamiento de círculos y líneas */
     .flatpickr-calendar {
-      border-radius: 18px !important;
+      border-radius: 20px !important;
       border: 2px solid var(--border) !important;
       background: var(--cream-card) !important;
-      box-shadow: 0 12px 28px rgba(13, 110, 106, 0.12) !important;
+      box-shadow: 0 14px 30px rgba(13, 110, 106, 0.14) !important;
+      padding: 10px !important;
+      width: 332px !important;
+      max-width: 100% !important;
     }
 
-    .flatpickr-day.selected,
-    .flatpickr-day.startRange,
-    .flatpickr-day.endRange,
-    .flatpickr-day.inRange {
-      background: var(--teal-ink) !important;
-      border-color: var(--teal-ink) !important;
-      color: #ffffff !important;
+    .flatpickr-months {
+      margin-bottom: 6px !important;
     }
 
-    .flatpickr-day.inRange {
-      background: var(--aqua) !important;
+    .flatpickr-weekdays {
+      margin-bottom: 4px !important;
+    }
+
+    span.flatpickr-weekday {
+      color: var(--teal-ink) !important;
+      font-weight: 700 !important;
+      font-size: 0.82rem !important;
+    }
+
+    .flatpickr-days {
+      width: 308px !important;
+    }
+
+    .dayContainer {
+      width: 308px !important;
+      min-width: 308px !important;
+      max-width: 308px !important;
+      display: grid !important;
+      grid-template-columns: repeat(7, 1fr) !important;
+      gap: 4px !important;
+      padding: 2px !important;
+    }
+
+    .flatpickr-day {
+      width: 38px !important;
+      max-width: 38px !important;
+      height: 38px !important;
+      line-height: 36px !important;
+      margin: 0 auto !important;
+      border-radius: 50% !important;
+      border: 1.5px solid transparent !important;
+      font-weight: 700 !important;
+      font-size: 0.88rem !important;
+      box-shadow: none !important;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
+    }
+
+    .flatpickr-day:hover:not(.flatpickr-disabled):not(.booked-day) {
+      background: var(--aqua-soft) !important;
       border-color: var(--aqua) !important;
       color: var(--teal-deep) !important;
     }
 
+    .flatpickr-day.today:not(.selected):not(.booked-day):not(.flatpickr-disabled) {
+      border-color: var(--teal-ink) !important;
+      color: var(--teal-ink) !important;
+    }
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange {
+      background: var(--teal-ink) !important;
+      border-color: var(--teal-ink) !important;
+      color: #ffffff !important;
+      border-radius: 50% !important;
+      box-shadow: none !important;
+    }
+
+    .flatpickr-day.inRange {
+      background: var(--aqua-soft) !important;
+      border-color: var(--aqua) !important;
+      color: var(--teal-deep) !important;
+      border-radius: 50% !important;
+      box-shadow: none !important;
+    }
+
     /* Días pasados (anteriores a hoy) */
     .flatpickr-day.prevMonthDay.flatpickr-disabled,
+    .flatpickr-day.nextMonthDay.flatpickr-disabled,
     .flatpickr-day.flatpickr-disabled {
-      background-color: #e5e7eb !important;
-      border-color: #d1d5db !important;
+      background-color: #f3f4f6 !important;
+      border-color: transparent !important;
       color: #9ca3af !important;
       cursor: not-allowed !important;
     }
 
-    /* Fechas ocupadas / reservadas en gris oscuro opaco */
+    /* Fechas ocupadas / reservadas en gris oscuro opaco bien separado */
     .flatpickr-day.booked-day,
     .flatpickr-day.booked-day.flatpickr-disabled,
     .flatpickr-day.booked-day:hover {
       background-color: #4b5563 !important;
       border-color: #374151 !important;
-      color: #f3f4f6 !important;
-      opacity: 0.88 !important;
+      color: #f9fafb !important;
+      opacity: 0.92 !important;
       text-decoration: line-through !important;
       font-weight: 700 !important;
+      border-radius: 50% !important;
       cursor: not-allowed !important;
     }
   </style>
@@ -391,7 +524,25 @@
           Elige fecha de entrada y salida para calcular tus noches y el total a pagar.
         </div>
 
-        <button type="button" class="btn-wa" id="sendBtn">REALIZAR RESERVA</button>
+        <div class="payment-box" id="paymentBox">
+          <div class="payment-box-title">4. Elige tu forma de pago</div>
+          <div class="payment-options" id="paymentOptions">
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="Efectivo" />
+              <span>Efectivo</span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="Bolívares a tasa BCV" />
+              <span>Bolívares a tasa BCV</span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="Binance" />
+              <span>Binance</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="button" class="btn-wa" id="sendBtn" disabled>REALIZAR TU RESERVA AHORA</button>
       </div>
 
       <div class="footer-note">@micasitatortuga • Chichiriviche, Morrocoy</div>
@@ -407,6 +558,7 @@
     let bookedData = { galapagos: [], carey: [], posada: [] };
     let currentOption = null;
     let selectedDates = [];
+    let selectedPayment = '';
     let picker;
 
     const OPTIONS_CONFIG = {
@@ -451,12 +603,8 @@
     function buildDisabledRanges(ranges) {
       return ranges.map(r => {
         const startDate = parseLocalDate(r.start);
-        const endDate = parseLocalDate(r.end);
-        const lastNight = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 1);
-        if (lastNight < startDate) {
-          return { from: r.start, to: r.start };
-        }
-        return { from: formatLocalDate(startDate), to: formatLocalDate(lastNight) };
+        const endDate = parseLocalDate(r.end || r.start);
+        return { from: formatLocalDate(startDate), to: formatLocalDate(endDate) };
       });
     }
 
@@ -465,25 +613,57 @@
       return disabledRanges.some(range => target >= range.from && target <= range.to);
     }
 
+    function hasValidNights() {
+      if (selectedDates.length < 2) return false;
+      const [d1, d2] = selectedDates;
+      const t1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+      const t2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+      return Math.round((t2 - t1) / 86400000) > 0;
+    }
+
+    function evaluateFormState() {
+      const nameVal = document.getElementById('guestName').value.trim();
+      const paymentBox = document.getElementById('paymentBox');
+      const sendBtn = document.getElementById('sendBtn');
+
+      const datesReady = hasValidNights();
+      const nameReady = nameVal.length > 0;
+
+      // Desplegar el recuadro de forma de pago una vez que eligió fechas y completó su nombre
+      if (datesReady && nameReady) {
+        paymentBox.classList.add('visible');
+      } else {
+        paymentBox.classList.remove('visible');
+      }
+
+      // Habilitar botón verde SOLO cuando todo esté completo (personas, fechas válidas, nombre y método de pago)
+      const allReady = Boolean(currentOption) && datesReady && nameReady && Boolean(selectedPayment);
+      sendBtn.disabled = !allReady;
+      if (allReady) {
+        sendBtn.classList.add('ready');
+      } else {
+        sendBtn.classList.remove('ready');
+      }
+    }
+
     function updateSummary() {
       const box = document.getElementById('summaryBox');
-      if (selectedDates.length === 2 && currentOption) {
+      if (hasValidNights() && currentOption) {
         const [d1, d2] = selectedDates;
         const t1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
         const t2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
         const nights = Math.round((t2 - t1) / 86400000);
-        if (nights > 0) {
-          const total = nights * currentOption.rate;
-          box.innerHTML = `<strong>Espacio:</strong> ${currentOption.title}<br>` +
-            `<strong>Check-in:</strong> ${d1.toLocaleDateString('es-VE')} (2:00 PM)<br>` +
-            `<strong>Check-out:</strong> ${d2.toLocaleDateString('es-VE')} (11:00 AM)<br>` +
-            `<strong>Total de noches:</strong> ${nights}<br>` +
-            `<div class="total-highlight"><strong>Total referencial:</strong> $${total} <span style="font-size:0.84rem; font-weight:600; color:var(--muted);">(Efectivo, Bs. tasa BCV o Binance)</span></div>` +
-            `<div class="summary-deposit"><strong>Para CONCRETAR la reserva debe abonar el 50% del total de la estadía</strong></div>`;
-          return;
-        }
+        const total = nights * currentOption.rate;
+        box.innerHTML = `<strong>Espacio:</strong> ${currentOption.title}<br>` +
+          `<strong>Check-in:</strong> ${d1.toLocaleDateString('es-VE')} (2:00 PM)<br>` +
+          `<strong>Check-out:</strong> ${d2.toLocaleDateString('es-VE')} (11:00 AM)<br>` +
+          `<strong>Total de noches:</strong> ${nights}<br>` +
+          `<div class="total-highlight"><strong>Total referencial:</strong> $${total} <span style="font-size:0.84rem; font-weight:600; color:var(--muted);">(Efectivo, Bs. tasa BCV o Binance)</span></div>` +
+          `<div class="summary-deposit"><strong>Para CONCRETAR la reserva debe abonar el 50% del total de la estadía</strong></div>`;
+      } else {
+        box.textContent = 'Elige fecha de entrada y salida para calcular tus noches y el total a pagar.';
       }
-      box.textContent = 'Elige fecha de entrada y salida para calcular tus noches y el total a pagar.';
+      evaluateFormState();
     }
 
     function renderCalendarForOption() {
@@ -529,7 +709,7 @@
         bookedData = data;
         const gCount = (data.galapagos || []).length;
         const cCount = (data.carey || []).length;
-        status.textContent = `Disponibilidad sincronizada (Galápagos: ${gCount} bloqueos · Carey: ${cCount} bloqueos).`;
+        status.textContent = `Disponibilidad sincronizada (Galápagos: ${gCount} noches bloqueadas · Carey: ${cCount} noches bloqueadas).`;
       } catch (e) {
         status.textContent = 'No se pudo cargar la disponibilidad: ' + e.message;
       }
@@ -542,15 +722,24 @@
       renderCalendarForOption();
     });
 
-    document.getElementById('sendBtn').addEventListener('click', () => {
-      const name = document.getElementById('guestName').value.trim() || 'No especificado';
+    document.getElementById('guestName').addEventListener('input', () => {
+      evaluateFormState();
+    });
 
-      if (!currentOption) {
-        alert('Primero selecciona la cantidad de personas.');
-        return;
-      }
-      if (selectedDates.length < 2) {
-        alert('Por favor selecciona las fechas de check-in y check-out.');
+    document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        selectedPayment = e.target.value;
+        document.querySelectorAll('.payment-option').forEach(lbl => lbl.classList.remove('selected'));
+        if (e.target.closest('.payment-option')) {
+          e.target.closest('.payment-option').classList.add('selected');
+        }
+        evaluateFormState();
+      });
+    });
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const name = document.getElementById('guestName').value.trim();
+      if (!currentOption || !hasValidNights() || !name || !selectedPayment) {
         return;
       }
 
@@ -564,20 +753,14 @@
       const checkOut = d2.toLocaleDateString('es-VE');
 
       const message =
-        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:
-` +
-        `• *Personas:* ${currentOption.label}
-` +
-        `• *Espacio:* ${currentOption.title}
-` +
-        `• *Check-in:* ${checkIn} (2:00 PM)
-` +
-        `• *Check-out:* ${checkOut} (11:00 AM)
-` +
-        `• *Total de noches:* ${nights}
-` +
-        `• *Total referencial:* $${total} (Efectivo, Bs. tasa BCV o Binance — abono del 50%: $${deposit})
-` +
+        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:\n` +
+        `• *Personas:* ${currentOption.label}\n` +
+        `• *Espacio:* ${currentOption.title}\n` +
+        `• *Check-in:* ${checkIn} (2:00 PM)\n` +
+        `• *Check-out:* ${checkOut} (11:00 AM)\n` +
+        `• *Total de noches:* ${nights}\n` +
+        `• *Total referencial:* $${total} (abono del 50%: $${deposit})\n` +
+        `• *Forma de pago elegida:* ${selectedPayment}\n` +
         `• *Nombre:* ${name}`;
 
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
