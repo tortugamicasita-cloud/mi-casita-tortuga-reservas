@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservas — Tu Casita de Playa en Chichiriviche</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <style>
+    :root {
+      --cream: #fdf8ea;
+      --cream-card: #fffdf7;
+      --teal-ink: #0d6e6a;
+      --teal-deep: #09524f;
+      --aqua: #86cfc7;
+      --aqua-soft: #d9f1ee;
+      --coral: #df7870;
+      --coral-soft: #fce6e4;
+      --text: #143635;
+      --muted: #4b6b69;
+      --border: #bfe3de;
+      --whatsapp: #25d366;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--cream);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      padding: 24px 16px 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 540px;
+      background: var(--cream-card);
+      border-radius: 26px;
+      padding: 28px 22px 26px;
+      border: 2px solid var(--border);
+      box-shadow: 0 14px 34px rgba(13, 110, 106, 0.10);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -45px;
+      right: -45px;
+      width: 150px;
+      height: 150px;
+      background: var(--aqua-soft);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .content { position: relative; z-index: 1; }
+
+    .eyebrow {
+      text-align: center;
+      font-family: 'Pacifico', cursive;
+      color: var(--teal-ink);
+      font-size: 1.25rem;
+      margin: 0 0 2px;
+      line-height: 1.3;
+    }
+
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2rem;
+      color: var(--teal-ink);
+      letter-spacing: 0.4px;
+      line-height: 1.1;
+    }
+
+    .brush-banner {
+      margin: 10px auto 18px;
+      display: inline-block;
+      background: linear-gradient(104deg, transparent 2%, var(--aqua) 4%, var(--aqua) 96%, transparent 98%);
+      padding: 5px 16px;
+      border-radius: 10px 18px 8px 16px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.92rem;
+      color: var(--teal-deep);
+      font-weight: 600;
+    }
+
+    .banner-wrap { text-align: center; }
+
+    .amenities-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--teal-ink);
+      background: var(--cream);
+      border: 1.5px dashed var(--aqua);
+      border-radius: 16px;
+      padding: 10px 12px;
+      margin-bottom: 18px;
+    }
+
+    .status {
+      font-size: 0.84rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      color: var(--teal-ink);
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--cream);
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: var(--teal-ink);
+      box-shadow: 0 0 0 3px rgba(13, 110, 106, 0.14);
+      background: #ffffff;
+    }
+
+    .calendar-section { display: none; }
+    .calendar-section.visible { display: block; }
+
+    .assigned-box {
+      background: var(--aqua-soft);
+      border: 2px solid var(--aqua);
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+
+    .assigned-title {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.25rem;
+      color: var(--teal-deep);
+      margin: 0 0 2px;
+    }
+
+    .assigned-meta {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--teal-ink);
+    }
+
+    .price-pill {
+      display: inline-block;
+      margin-top: 6px;
+      background: var(--coral-soft);
+      color: #b84b43;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+      border-radius: 12px;
+      line-height: 1.35;
+    }
+
+    .payment-note {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--teal-deep);
+    }
+
+    .promo-note {
+      margin-top: 6px;
+      background: rgba(255, 255, 255, 0.72);
+      border-left: 3px solid var(--coral);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #9e3d36;
+      line-height: 1.35;
+    }
+
+    .summary {
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 0.94rem;
+      line-height: 1.55;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .total-highlight {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--aqua);
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.05rem;
+      color: var(--teal-ink);
+    }
+
+    .summary-promo {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #b84b43;
+    }
+
+    .btn-wa {
+      width: 100%;
+      padding: 15px 18px;
+      border: none;
+      border-radius: 16px;
+      background: var(--whatsapp);
+      color: #072914;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 1.08rem;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #189e49;
+      transition: transform 0.1s, filter 0.15s;
+    }
+
+    .btn-wa:hover { filter: brightness(1.03); }
+    .btn-wa:active { transform: translateY(3px); box-shadow: 0 3px 0 #189e49; }
+
+    .footer-note {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .flatpickr-calendar {
+      border-radius: 18px !important;
+      border: 2px solid var(--border) !important;
+      background: var(--cream-card) !important;
+      box-shadow: 0 12px 28px rgba(13, 110, 106, 0.12) !important;
+    }
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange,
+    .flatpickr-day.inRange {
+      background: var(--teal-ink) !important;
+      border-color: var(--teal-ink) !important;
+      color: #ffffff !important;
+    }
+
+    .flatpickr-day.inRange {
+      background: var(--aqua) !important;
+      border-color: var(--aqua) !important;
+      color: var(--teal-deep) !important;
+    }
+
+    .flatpickr-day.disabled {
+      text-decoration: line-through;
+      color: var(--coral) !important;
+      opacity: 0.65;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="content">
+      <p class="eyebrow">Tu Casita de Playa en</p>
+      <h1>CHICHIRIVICHE</h1>
+      <div class="banner-wrap">
+        <div class="brush-banner">Cabañas Galápagos &amp; Carey • Mi Casita Tortuga</div>
+      </div>
+
+      <div class="amenities-strip">
+        <span>Piscina</span>
+        <span>•</span>
+        <span>Aire Acondicionado</span>
+        <span>•</span>
+        <span>WiFi</span>
+        <span>•</span>
+        <span>Agua 24/7</span>
+        <span>•</span>
+        <span>Smart TV</span>
+        <span>•</span>
+        <span>Estacionamiento Privado</span>
+      </div>
+
+      <div class="status" id="statusMsg">Sincronizando disponibilidad con el calendario...</div>
+
+      <label for="guestCount">1. ¿Cuántas personas vienen?</label>
+      <select id="guestCount">
+        <option value="" selected disabled>Elige la cantidad de personas</option>
+        <option value="1">1 persona</option>
+        <option value="2">2 personas</option>
+        <option value="3">3 personas</option>
+        <option value="4">4 personas</option>
+        <option value="5">5 personas</option>
+        <option value="6">6 personas</option>
+        <option value="7">7 personas</option>
+        <option value="8">8 personas</option>
+        <option value="9">9 personas</option>
+        <option value="10">10 personas</option>
+      </select>
+
+      <div class="calendar-section" id="calendarSection">
+        <div class="assigned-box">
+          <div class="assigned-title" id="assignedTitle"></div>
+          <div class="assigned-meta" id="assignedMeta"></div>
+          <span class="price-pill" id="assignedPrice"></span>
+          <div class="payment-note">Cancelable en efectivo, en bolívares a tasa BCV o Binance.</div>
+          <div class="promo-note">En temporada baja se ofrece un 20% de descuento y se confirma el monto final cuando se concreta la reserva.</div>
+        </div>
+
+        <label for="dateRange">2. Selecciona tus fechas (Check-in / Check-out)</label>
+        <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
+
+        <label for="guestName">3. Tu nombre</label>
+        <input type="text" id="guestName" placeholder="Ej. María Pérez" />
+
+        <div class="summary" id="summaryBox">
+          Elige fecha de entrada y salida para calcular tus noches y el total a pagar.
+        </div>
+
+        <button type="button" class="btn-wa" id="sendBtn">Confirmar reserva vía WhatsApp</button>
+      </div>
+
+      <div class="footer-note">@micasitatortuga • Chichiriviche, Morrocoy</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyo_oQX_6GMNRn0Y5sC2ypJZMQBk0zdGzv9kr9abBC4tHvaJZ8EMM8Bcz2z_PYwFBh7TQ/exec';
+    const WHATSAPP_NUMBER = '584120394582';
+
+    let bookedData = { galapagos: [], carey: [], posada: [] };
+    let currentOption = null;
+    let selectedDates = [];
+    let picker;
+
+    function getOptionByGuests(count) {
+      if (count <= 4) {
+        return {
+          key: 'galapagos',
+          title: 'Cabaña Galápagos',
+          meta: 'Calendario asignado: hasta 4 personas',
+          price: 'Referencia: $60 por noche',
+          rate: 60
+        };
+      }
+      if (count <= 6) {
+        return {
+          key: 'carey',
+          title: 'Cabaña Carey',
+          meta: 'Calendario asignado: de 5 a 6 personas',
+          price: 'Referencia: $90 por noche',
+          rate: 90
+        };
+      }
+      return {
+        key: 'posada',
+        title: 'Toda la Posada (Ambas Cabañas)',
+        meta: 'Calendario asignado: de 7 a 10 personas',
+        price: 'Referencia: $150 por noche (Galápagos + Carey)',
+        rate: 150
+      };
+    }
+
+    function buildDisabledRanges(ranges) {
+      return ranges.map(r => {
+        const startDate = new Date(r.start + 'T00:00:00');
+        const endDate = new Date(r.end + 'T00:00:00');
+        const lastNight = new Date(endDate.getTime() - 86400000);
+        if (lastNight < startDate) {
+          return { from: r.start, to: r.start };
+        }
+        const fmt = d => d.toISOString().slice(0, 10);
+        return { from: fmt(startDate), to: fmt(lastNight) };
+      });
+    }
+
+    function updateSummary() {
+      const box = document.getElementById('summaryBox');
+      if (selectedDates.length === 2 && currentOption) {
+        const [d1, d2] = selectedDates;
+        const nights = Math.round((d2 - d1) / 86400000);
+        if (nights > 0) {
+          const total = nights * currentOption.rate;
+          box.innerHTML = `<strong>Espacio:</strong> ${currentOption.title}<br>` +
+            `<strong>Check-in:</strong> ${d1.toLocaleDateString('es-VE')} (2:00 PM)<br>` +
+            `<strong>Check-out:</strong> ${d2.toLocaleDateString('es-VE')} (11:00 AM)<br>` +
+            `<strong>Total de noches:</strong> ${nights}<br>` +
+            `<div class="total-highlight"><strong>Total referencial:</strong> $${total} <span style="font-size:0.84rem; font-weight:600; color:var(--muted);">(Efectivo, Bs. tasa BCV o Binance)</span></div>` +
+            `<div class="summary-promo">En temporada baja se ofrece un 20% de descuento y se confirma el monto cuando se concreta la reserva.</div>`;
+          return;
+        }
+      }
+      box.textContent = 'Elige fecha de entrada y salida para calcular tus noches y el total a pagar.';
+    }
+
+    function renderCalendarForOption() {
+      const section = document.getElementById('calendarSection');
+      section.classList.add('visible');
+
+      document.getElementById('assignedTitle').textContent = currentOption.title;
+      document.getElementById('assignedMeta').textContent = currentOption.meta;
+      document.getElementById('assignedPrice').textContent = currentOption.price;
+
+      if (picker) picker.destroy();
+      selectedDates = [];
+      updateSummary();
+
+      picker = flatpickr('#dateRange', {
+        mode: 'range',
+        minDate: 'today',
+        locale: 'es',
+        dateFormat: 'Y-m-d',
+        disable: buildDisabledRanges(bookedData[currentOption.key] || []),
+        onChange: function(dates) {
+          selectedDates = dates;
+          updateSummary();
+        }
+      });
+    }
+
+    async function loadCalendar() {
+      const status = document.getElementById('statusMsg');
+      try {
+        const res = await fetch(SCRIPT_URL);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        bookedData = data;
+        status.textContent = 'Disponibilidad sincronizada con el calendario.';
+      } catch (e) {
+        status.textContent = 'No se pudo cargar la disponibilidad; revisa la URL del script.';
+      }
+    }
+
+    document.getElementById('guestCount').addEventListener('change', (e) => {
+      const count = parseInt(e.target.value, 10);
+      if (!count) return;
+      currentOption = getOptionByGuests(count);
+      renderCalendarForOption();
+    });
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const count = document.getElementById('guestCount').value;
+      const name = document.getElementById('guestName').value.trim() || 'No especificado';
+
+      if (!count || !currentOption) {
+        alert('Primero selecciona la cantidad de personas.');
+        return;
+      }
+      if (selectedDates.length < 2) {
+        alert('Por favor selecciona las fechas de check-in y check-out.');
+        return;
+      }
+
+      const [d1, d2] = selectedDates;
+      const nights = Math.round((d2 - d1) / 86400000);
+      const total = nights * currentOption.rate;
+      const checkIn = d1.toLocaleDateString('es-VE');
+      const checkOut = d2.toLocaleDateString('es-VE');
+
+      const message =
+        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:
+` +
+        `• *Personas:* ${count}
+` +
+        `• *Espacio:* ${currentOption.title}
+` +
+        `• *Check-in:* ${checkIn} (2:00 PM)
+` +
+        `• *Check-out:* ${checkOut} (11:00 AM)
+` +
+        `• *Total de noches:* ${nights}
+` +
+        `• *Total referencial:* $${total} (Efectivo, Bs. tasa BCV o Binance — sujeto a 20% de descuento en temporada baja)
+` +
+        `• *Nombre:* ${name}`;
+
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    });
+
+    loadCalendar();
+  </script>
+</body>
+</html>
