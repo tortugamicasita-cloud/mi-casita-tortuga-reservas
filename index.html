@@ -115,77 +115,18 @@
     }
 
     .amenities-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--teal-ink);
       background: var(--cream);
       border: 1.5px dashed var(--aqua);
       border-radius: 16px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       margin-bottom: 18px;
-      text-align: center;
-    }
-
-    .cabanas-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-
-    .cabana-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      line-height: 1.25;
-    }
-
-    .cabana-name {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--teal-deep);
-    }
-
-    .cabana-capacity {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--muted);
-    }
-
-    .amenities-rows {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    /* Siempre 2 filas de 3 amenidades; el tamaño de fuente se ajusta al ancho para que nunca se corte */
-    .amenities-line {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: center;
-      gap: 0 clamp(6px, 2.4vw, 14px);
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      font-size: clamp(0.6rem, 3.1vw, 0.78rem);
-      font-weight: 700;
-      color: var(--teal-ink);
-      line-height: 1.3;
-    }
-
-    .amenities-line li {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4em;
-      white-space: nowrap;
-    }
-
-    .amenities-line li::before {
-      content: "";
-      width: 0.4em;
-      height: 0.4em;
-      border-radius: 50%;
-      background: var(--teal-ink);
-      flex: none;
     }
 
     label {
@@ -273,21 +214,14 @@
       line-height: 1.35;
     }
 
-    /* Leyenda dentro del calendario desplegable (se inserta desde flatpickr onReady) */
     .calendar-legend {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
       align-items: center;
-      gap: 6px 16px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.8rem;
+      gap: 16px;
+      font-size: 0.82rem;
       font-weight: 700;
       color: var(--muted);
-      padding: 10px 12px 12px;
-      margin-top: 4px;
-      border-top: 1px solid var(--border);
-      width: 100%;
+      margin: -8px 0 14px;
     }
 
     .legend-item {
@@ -588,14 +522,6 @@
       border-radius: 50% !important;
       cursor: not-allowed !important;
     }
-
-    /* Pantallas muy angostas: más espacio útil para que no se corte ningún texto */
-    @media (max-width: 380px) {
-      body { padding: 16px 10px 32px; }
-      .card { padding: 24px 14px 22px; }
-      .amenities-strip { padding: 12px 6px; }
-      select, input[type="text"] { font-size: 0.92rem; padding: 12px 10px; }
-    }
   </style>
 </head>
 <body>
@@ -608,28 +534,17 @@
       </div>
 
       <div class="amenities-strip">
-        <div class="cabanas-grid">
-          <div class="cabana-item">
-            <span class="cabana-name">Cabaña Carey</span>
-            <span class="cabana-capacity">hasta 6 personas</span>
-          </div>
-          <div class="cabana-item">
-            <span class="cabana-name">Cabaña Galápagos</span>
-            <span class="cabana-capacity">hasta 4 personas</span>
-          </div>
-        </div>
-        <div class="amenities-rows">
-          <ul class="amenities-line">
-            <li>Piscina</li>
-            <li>Estacionamiento Privado</li>
-            <li>WiFi</li>
-          </ul>
-          <ul class="amenities-line">
-            <li>Aire Acondicionado</li>
-            <li>Agua 24/7</li>
-            <li>Smart TV</li>
-          </ul>
-        </div>
+        <span>Piscina</span>
+        <span>•</span>
+        <span>Aire Acondicionado</span>
+        <span>•</span>
+        <span>WiFi</span>
+        <span>•</span>
+        <span>Agua 24/7</span>
+        <span>•</span>
+        <span>Smart TV</span>
+        <span>•</span>
+        <span>Estacionamiento Privado</span>
       </div>
 
       <label for="guestCount">1. ¿Cuántas personas vienen?</label>
@@ -651,6 +566,10 @@
 
         <label for="dateRange">2. Selecciona tus fechas, elige el día en que llegas y el día en que te vas</label>
         <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
+        <div class="calendar-legend">
+          <span class="legend-item"><span class="legend-box legend-available"></span> Disponible</span>
+          <span class="legend-item"><span class="legend-box legend-occupied"></span> Ocupado (no disponible)</span>
+        </div>
 
         <!-- Aviso condicional estricto: solo si eligió "Hasta 4 personas" (Galápagos),
              Galápagos está ocupada en esas fechas Y Cabaña Carey SÍ está libre -->
@@ -895,15 +814,6 @@
         locale: 'es',
         dateFormat: 'Y-m-d',
         disable: disabledRanges,
-        onReady: function(selectedDates, dateStr, fp) {
-          // Leyenda al pie del calendario desplegable
-          const legend = document.createElement('div');
-          legend.className = 'calendar-legend';
-          legend.innerHTML =
-            '<span class="legend-item"><span class="legend-box legend-available"></span> Disponible</span>' +
-            '<span class="legend-item"><span class="legend-box legend-occupied"></span> Ocupado (no disponible)</span>';
-          fp.calendarContainer.appendChild(legend);
-        },
         onDayCreate: function(dObj, dStr, fp, dayElem) {
           const dt = dayElem.dateObj;
           if (!dt) return;
