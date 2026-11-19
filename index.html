@@ -83,22 +83,29 @@
     }
 
     .banner-wrap {
-      text-align: center;
-      margin: 11px 0 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin: 12px 0 16px;
     }
 
     .brush-banner {
-      display: inline-block;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
       max-width: 100%;
       white-space: nowrap;
-      background: linear-gradient(104deg, transparent 1.5%, var(--aqua) 3.5%, var(--aqua) 96.5%, transparent 98.5%);
-      padding: 6px 18px;
+      background: linear-gradient(104deg, transparent 1.5%, var(--aqua) 4%, var(--aqua) 96%, transparent 98.5%);
+      padding: 6px 16px;
       border-radius: 10px 18px 8px 16px;
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(0.68rem, 3.05vw, 0.86rem);
+      font-size: clamp(0.60rem, 2.55vw, 0.85rem);
       color: var(--teal-deep);
       font-weight: 600;
-      letter-spacing: -0.1px;
+      letter-spacing: -0.15px;
+      line-height: 1.25;
     }
 
     .amenities-strip {
@@ -515,7 +522,7 @@
           <div class="promo-note">En temporada baja se ofrece un 20% de descuento</div>
         </div>
 
-        <label for="dateRange">2. Selecciona tus fechas (Check-in / Check-out)</label>
+        <label for="dateRange">2. Selecciona tus fechas, elige el día en que llegas y el día en que te vas</label>
         <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
         <div class="calendar-legend">
           <span class="legend-item"><span class="legend-box legend-available"></span> Disponible</span>
