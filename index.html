@@ -21,19 +21,6 @@
       --text: #143635;
       --muted: #4b6b69;
       --border: #bfe3de;
-
-      /* Colores de bloqueo por espacio */
-      --block-carey-bg: #fef08a;     /* Amarillo pastel */
-      --block-carey-border: #eab308;
-      --block-carey-text: #713f12;
-
-      --block-galapagos-bg: #99f6e4; /* Turquesa pastel */
-      --block-galapagos-border: #14b8a6;
-      --block-galapagos-text: #134e4a;
-
-      --block-posada-bg: #6b7280;    /* Gris */
-      --block-posada-border: #374151;
-      --block-posada-text: #ffffff;
     }
 
     * { box-sizing: border-box; }
@@ -221,66 +208,75 @@
       line-height: 1.35;
     }
 
-    .calendar-legend-top {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      background: var(--cream);
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .legend-row {
+    .calendar-legend {
       display: flex;
       align-items: center;
-      gap: 8px;
-      line-height: 1.3;
+      gap: 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin: -8px 0 14px;
     }
 
-    .legend-dot {
-      width: 13px;
-      height: 13px;
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-box {
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       display: inline-block;
-      flex-shrink: 0;
     }
 
-    .dot-carey {
-      background-color: var(--block-carey-bg);
-      border: 1.5px solid var(--block-carey-border);
+    .legend-available {
+      background-color: #ffffff;
+      border: 1.5px solid var(--teal-ink);
     }
 
-    .dot-galapagos {
-      background-color: var(--block-galapagos-bg);
-      border: 1.5px solid var(--block-galapagos-border);
+    .legend-occupied {
+      background-color: #4b5563;
+      border: 1px solid #374151;
     }
 
-    .dot-posada {
-      background-color: var(--block-posada-bg);
-      border: 1.5px solid var(--block-posada-border);
-    }
-
-    .selection-alert {
+    /* Aviso condicional: solo se muestra cuando el usuario elige "Hasta 4 personas",
+       Galápagos está ocupada en las fechas intentadas, y Carey SÍ está libre */
+    .carey-upsell-box {
       display: none;
-      margin-top: -8px;
-      margin-bottom: 14px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: var(--coral-soft);
-      border: 1.5px solid var(--coral);
-      color: #9e3d36;
-      font-size: 0.84rem;
+      margin: -4px 0 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fffbeb;
+      border: 1.5px solid #f59e0b;
+      color: #78350f;
+      font-size: 0.86rem;
       font-weight: 700;
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
-    .selection-alert.visible {
+    .carey-upsell-box.visible {
       display: block;
+    }
+
+    .carey-upsell-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 7px 12px;
+      border: none;
+      border-radius: 10px;
+      background: var(--teal-ink);
+      color: #ffffff;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter 0.15s ease;
+    }
+
+    .carey-upsell-btn:hover {
+      filter: brightness(1.08);
     }
 
     .summary {
@@ -468,13 +464,13 @@
       transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
     }
 
-    .flatpickr-day:hover:not(.flatpickr-disabled):not(.blocked-day) {
+    .flatpickr-day:hover:not(.flatpickr-disabled):not(.booked-day) {
       background: var(--aqua-soft) !important;
       border-color: var(--aqua) !important;
       color: var(--teal-deep) !important;
     }
 
-    .flatpickr-day.today:not(.selected):not(.blocked-day):not(.flatpickr-disabled) {
+    .flatpickr-day.today:not(.selected):not(.booked-day):not(.flatpickr-disabled) {
       border-color: var(--teal-ink) !important;
       color: var(--teal-ink) !important;
     }
@@ -497,6 +493,7 @@
       box-shadow: none !important;
     }
 
+    /* Días pasados */
     .flatpickr-day.prevMonthDay.flatpickr-disabled,
     .flatpickr-day.nextMonthDay.flatpickr-disabled,
     .flatpickr-day.flatpickr-disabled {
@@ -506,38 +503,17 @@
       cursor: not-allowed !important;
     }
 
-    /* Estados visuales de bloqueo en el calendario */
-    .flatpickr-day.block-carey,
-    .flatpickr-day.block-carey:hover {
-      background-color: var(--block-carey-bg) !important;
-      border-color: var(--block-carey-border) !important;
-      color: var(--block-carey-text) !important;
-      font-weight: 700 !important;
-      border-radius: 50% !important;
-    }
-
-    .flatpickr-day.block-galapagos,
-    .flatpickr-day.block-galapagos:hover {
-      background-color: var(--block-galapagos-bg) !important;
-      border-color: var(--block-galapagos-border) !important;
-      color: var(--block-galapagos-text) !important;
-      font-weight: 700 !important;
-      border-radius: 50% !important;
-    }
-
-    .flatpickr-day.block-both-cabs,
-    .flatpickr-day.block-both-cabs:hover,
-    .flatpickr-day.block-posada,
-    .flatpickr-day.block-posada:hover {
-      background-color: var(--block-posada-bg) !important;
-      border-color: var(--block-posada-border) !important;
-      color: var(--block-posada-text) !important;
+    /* Días ocupados para el espacio asignado */
+    .flatpickr-day.booked-day,
+    .flatpickr-day.booked-day.flatpickr-disabled,
+    .flatpickr-day.booked-day:hover {
+      background-color: #4b5563 !important;
+      border-color: #374151 !important;
+      color: #f9fafb !important;
+      opacity: 0.92 !important;
       text-decoration: line-through !important;
       font-weight: 700 !important;
       border-radius: 50% !important;
-    }
-
-    .flatpickr-day.blocked-for-selection {
       cursor: not-allowed !important;
     }
   </style>
@@ -583,24 +559,18 @@
         </div>
 
         <label for="dateRange">2. Selecciona tus fechas, elige el día en que llegas y el día en que te vas</label>
-
-        <div class="calendar-legend-top" aria-label="Leyenda de días bloqueados">
-          <div class="legend-row">
-            <span class="legend-dot dot-carey"></span>
-            <span>Días bloqueados Cabaña Carey</span>
-          </div>
-          <div class="legend-row">
-            <span class="legend-dot dot-galapagos"></span>
-            <span>Días bloqueados Cabaña Galápagos</span>
-          </div>
-          <div class="legend-row">
-            <span class="legend-dot dot-posada"></span>
-            <span>Días bloqueados toda la posada</span>
-          </div>
+        <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
+        <div class="calendar-legend">
+          <span class="legend-item"><span class="legend-box legend-available"></span> Disponible</span>
+          <span class="legend-item"><span class="legend-box legend-occupied"></span> Ocupado (no disponible)</span>
         </div>
 
-        <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
-        <div class="selection-alert" id="selectionAlert"></div>
+        <!-- Aviso condicional estricto: solo si eligió "Hasta 4 personas" (Galápagos),
+             Galápagos está ocupada en esas fechas Y Cabaña Carey SÍ está libre -->
+        <div class="carey-upsell-box" id="careyUpsellBox">
+          <div id="careyUpsellText"></div>
+          <button type="button" class="carey-upsell-btn" id="switchToCareyBtn">Cambiar a Cabaña Carey ($90/noche)</button>
+        </div>
 
         <label for="guestName">3. Tu nombre</label>
         <input type="text" id="guestName" placeholder="Ej. María Pérez" />
@@ -699,78 +669,77 @@
       });
     }
 
-    function getDayBlockState(dateObj) {
-      const hasCarey = isDateInRanges(dateObj, bookedData.carey);
-      const hasGalapagos = isDateInRanges(dateObj, bookedData.galapagos);
-      const hasPosada = isDateInRanges(dateObj, bookedData.posada);
+    // Devuelve los rangos bloqueados efectivos según el espacio seleccionado:
+    // - galapagos: eventos de 'galapagos' + 'posada'
+    // - carey: eventos de 'carey' + 'posada'
+    // - posada: eventos de 'galapagos' + 'carey' + 'posada'
+    function getBlockedRangesForOption(optionKey) {
+      const gal = Array.isArray(bookedData.galapagos) ? bookedData.galapagos : [];
+      const car = Array.isArray(bookedData.carey) ? bookedData.carey : [];
+      const pos = Array.isArray(bookedData.posada) ? bookedData.posada : [];
 
-      if (hasPosada) {
-        return { state: 'posada', hasCarey, hasGalapagos, hasPosada };
+      let combined = [];
+      if (optionKey === 'galapagos') {
+        combined = [...gal, ...pos];
+      } else if (optionKey === 'carey') {
+        combined = [...car, ...pos];
+      } else if (optionKey === 'posada') {
+        combined = [...gal, ...car, ...pos];
       }
-      if (hasCarey && hasGalapagos) {
-        return { state: 'both-cabs', hasCarey, hasGalapagos, hasPosada };
-      }
-      if (hasCarey) {
-        return { state: 'carey', hasCarey, hasGalapagos, hasPosada };
-      }
-      if (hasGalapagos) {
-        return { state: 'galapagos', hasCarey, hasGalapagos, hasPosada };
-      }
-      return { state: 'free', hasCarey: false, hasGalapagos: false, hasPosada: false };
+
+      return combined.map(r => {
+        const startDate = parseLocalDate(r.start);
+        const endDate = parseLocalDate(r.end || r.start);
+        return { from: formatLocalDate(startDate), to: formatLocalDate(endDate) };
+      });
     }
 
-    // Determina si un día está bloqueado para la opción seleccionada en el paso 1
-    function isBlockedForCurrentOption(dateObj) {
-      if (!currentOption) return true;
-      const info = getDayBlockState(dateObj);
-
-      if (info.hasPosada) return true; // Toda la posada bloqueada
-
-      if (currentOption.key === 'galapagos') {
-        return info.hasGalapagos;
-      }
-      if (currentOption.key === 'carey') {
-        return info.hasCarey;
-      }
-      if (currentOption.key === 'posada') {
-        // Para posada completa (hasta 10 personas), si alguna de las cabañas está bloqueada, no está disponible toda la posada
-        return info.hasCarey || info.hasGalapagos;
-      }
-      return false;
+    // Verifica estrictamente si Cabaña Carey está libre para una fecha específica
+    // (ni Carey ni Posada Completa ocupadas ese día)
+    function isCareyStrictlyFreeOnDate(dateObj) {
+      const careyOccupied = isDateInRanges(dateObj, bookedData.carey);
+      const posadaOccupied = isDateInRanges(dateObj, bookedData.posada);
+      return !careyOccupied && !posadaOccupied;
     }
 
-    function showSelectionAlert(msg) {
-      const el = document.getElementById('selectionAlert');
-      if (!msg) {
-        el.textContent = '';
-        el.classList.remove('visible');
+    // Verifica estrictamente si Galápagos está ocupada en una fecha específica
+    function isGalapagosOccupiedOnDate(dateObj) {
+      return isDateInRanges(dateObj, bookedData.galapagos) || isDateInRanges(dateObj, bookedData.posada);
+    }
+
+    function hideCareyUpsell() {
+      const box = document.getElementById('careyUpsellBox');
+      box.classList.remove('visible');
+      document.getElementById('careyUpsellText').textContent = '';
+    }
+
+    // Evalúa la condicional estricta:
+    // SOLO si el usuario eligió "galapagos" (Hasta 4 personas),
+    // Galápagos está ocupada en la fecha tocada, Y Cabaña Carey SÍ está libre ese día.
+    function evaluateCareyUpsellForDate(dateObj) {
+      hideCareyUpsell();
+      if (!currentOption || currentOption.key !== 'galapagos' || !dateObj) {
         return;
       }
-      el.textContent = msg;
-      el.classList.add('visible');
+      if (isGalapagosOccupiedOnDate(dateObj) && isCareyStrictlyFreeOnDate(dateObj)) {
+        const formattedDay = dateObj.toLocaleDateString('es-VE');
+        document.getElementById('careyUpsellText').textContent =
+          `El ${formattedDay} Cabaña Galápagos está ocupada, pero Cabaña Carey (hasta 6 personas) está libre. Si deseas reservarla para esa fecha, puedes cambiar a Cabaña Carey.`;
+        document.getElementById('careyUpsellBox').classList.add('visible');
+      }
     }
 
-    // Verifica si el rango completo (noches entre check-in y check-out) está libre para la opción elegida
-    function isRangeAvailableForCurrentOption(d1, d2) {
-      if (!d1 || !d2 || !currentOption) return false;
-      const start = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
-      const end = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
-      const nights = Math.round((end - start) / 86400000);
-      if (nights <= 0) return false;
-
-      // Revisamos cada noche de la estadía (desde start hasta end - 1 día)
-      for (let i = 0; i < nights; i++) {
-        const cur = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
-        if (isBlockedForCurrentOption(cur)) {
-          return false;
-        }
-      }
-      return true;
+    function isDateInDisabledRanges(dateObj, disabledRanges) {
+      const target = formatLocalDate(dateObj);
+      return disabledRanges.some(range => target >= range.from && target <= range.to);
     }
 
     function hasValidNights() {
       if (selectedDates.length < 2) return false;
-      return isRangeAvailableForCurrentOption(selectedDates[0], selectedDates[1]);
+      const [d1, d2] = selectedDates;
+      const t1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+      const t2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+      return Math.round((t2 - t1) / 86400000) > 0;
     }
 
     function evaluateFormState() {
@@ -826,9 +795,10 @@
 
       if (picker) picker.destroy();
       selectedDates = [];
-      showSelectionAlert('');
+      hideCareyUpsell();
       updateSummary();
 
+      const disabledRanges = getBlockedRangesForOption(currentOption.key);
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
 
@@ -837,6 +807,7 @@
         minDate: 'today',
         locale: 'es',
         dateFormat: 'Y-m-d',
+        disable: disabledRanges,
         onDayCreate: function(dObj, dStr, fp, dayElem) {
           const dt = dayElem.dateObj;
           if (!dt) return;
@@ -844,63 +815,24 @@
           const dayOnly = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
           if (dayOnly < todayStart) return;
 
-          const info = getDayBlockState(dt);
-          const blockedForMe = isBlockedForCurrentOption(dt);
+          if (isDateInDisabledRanges(dt, disabledRanges)) {
+            dayElem.classList.add('booked-day');
+            dayElem.title = 'Ocupado (no disponible)';
 
-          if (info.state === 'posada') {
-            dayElem.classList.add('block-posada', 'blocked-for-selection');
-            dayElem.title = 'Bloqueado: toda la posada';
-          } else if (info.state === 'both-cabs') {
-            dayElem.classList.add('block-both-cabs', 'blocked-for-selection');
-            dayElem.title = 'Bloqueado: ambas cabañas ocupadas (toda la posada no disponible)';
-          } else if (info.state === 'carey') {
-            dayElem.classList.add('block-carey');
-            if (blockedForMe) {
-              dayElem.classList.add('blocked-for-selection');
-              dayElem.title = 'Bloqueado para Cabaña Carey / Posada Completa';
-            } else {
-              dayElem.title = 'Cabaña Carey bloqueada — Cabaña Galápagos disponible';
-            }
-          } else if (info.state === 'galapagos') {
-            dayElem.classList.add('block-galapagos');
-            if (blockedForMe) {
-              dayElem.classList.add('blocked-for-selection');
-              dayElem.title = 'Bloqueado para Cabaña Galápagos / Posada Completa';
-            } else {
-              dayElem.title = 'Cabaña Galápagos bloqueada — Cabaña Carey disponible';
-            }
+            // Si el usuario intenta tocar este día ocupado estando en "Hasta 4 personas" (Galápagos),
+            // evaluamos si Carey está libre para mostrar el aviso condicional.
+            dayElem.addEventListener('click', () => {
+              evaluateCareyUpsellForDate(dt);
+            });
+          } else {
+            dayElem.addEventListener('click', () => {
+              hideCareyUpsell();
+            });
           }
         },
-        onChange: function(dates, dateStr, fp) {
-          showSelectionAlert('');
-
-          if (dates.length === 1) {
-            if (isBlockedForCurrentOption(dates[0])) {
-              fp.clear();
-              selectedDates = [];
-              showSelectionAlert('Ese día está bloqueado para ' + currentOption.title + '. Elige otro día disponible.');
-              updateSummary();
-              return;
-            }
-            selectedDates = dates;
-            updateSummary();
-            return;
-          }
-
-          if (dates.length === 2) {
-            if (!isRangeAvailableForCurrentOption(dates[0], dates[1])) {
-              fp.clear();
-              selectedDates = [];
-              showSelectionAlert('Hay al menos una noche bloqueada dentro del rango seleccionado para ' + currentOption.title + '. Elige otro rango disponible.');
-              updateSummary();
-              return;
-            }
-            selectedDates = dates;
-            updateSummary();
-            return;
-          }
-
-          selectedDates = [];
+        onChange: function(dates) {
+          hideCareyUpsell();
+          selectedDates = dates;
           updateSummary();
         }
       });
@@ -930,6 +862,16 @@
       if (!selectedKey || !OPTIONS_CONFIG[selectedKey]) return;
       currentOption = OPTIONS_CONFIG[selectedKey];
       renderCalendarForOption();
+    });
+
+    document.getElementById('switchToCareyBtn').addEventListener('click', () => {
+      const selectEl = document.getElementById('guestCount');
+      selectEl.value = 'carey';
+      currentOption = OPTIONS_CONFIG.carey;
+      renderCalendarForOption();
+      if (picker) {
+        picker.open();
+      }
     });
 
     document.getElementById('guestName').addEventListener('input', () => {
