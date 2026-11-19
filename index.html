@@ -258,11 +258,10 @@
       color: var(--teal-ink);
     }
 
-    .summary-promo {
+    .summary-deposit {
       margin-top: 6px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #b84b43;
+      font-size: 0.88rem;
+      color: var(--text);
     }
 
     .btn-wa {
@@ -382,7 +381,7 @@
           <div class="assigned-meta" id="assignedMeta"></div>
           <span class="price-pill" id="assignedPrice"></span>
           <div class="payment-note">Cancelable en efectivo, en bolívares a tasa BCV o Binance.</div>
-          <div class="promo-note">En temporada baja se ofrece un 20% de descuento y se confirma el monto final cuando se concreta la reserva.</div>
+          <div class="promo-note">En temporada baja se ofrece un 20% de descuento</div>
         </div>
 
         <label for="dateRange">2. Selecciona tus fechas (Check-in / Check-out)</label>
@@ -399,7 +398,7 @@
           Elige fecha de entrada y salida para calcular tus noches y el total a pagar.
         </div>
 
-        <button type="button" class="btn-wa" id="sendBtn">Confirmar reserva vía WhatsApp</button>
+        <button type="button" class="btn-wa" id="sendBtn">REALIZAR RESERVA</button>
       </div>
 
       <div class="footer-note">@micasitatortuga • Chichiriviche, Morrocoy</div>
@@ -488,7 +487,7 @@
             `<strong>Check-out:</strong> ${d2.toLocaleDateString('es-VE')} (11:00 AM)<br>` +
             `<strong>Total de noches:</strong> ${nights}<br>` +
             `<div class="total-highlight"><strong>Total referencial:</strong> $${total} <span style="font-size:0.84rem; font-weight:600; color:var(--muted);">(Efectivo, Bs. tasa BCV o Binance)</span></div>` +
-            `<div class="summary-promo">En temporada baja se ofrece un 20% de descuento y se confirma el monto cuando se concreta la reserva.</div>`;
+            `<div class="summary-deposit"><strong>Para CONCRETAR la reserva debe abonar el 50% del total de la estadía</strong></div>`;
           return;
         }
       }
@@ -569,17 +568,25 @@
       const t2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
       const nights = Math.round((t2 - t1) / 86400000);
       const total = nights * currentOption.rate;
+      const deposit = total * 0.5;
       const checkIn = d1.toLocaleDateString('es-VE');
       const checkOut = d2.toLocaleDateString('es-VE');
 
       const message =
-        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:\n` +
-        `• *Personas:* ${count}\n` +
-        `• *Espacio:* ${currentOption.title}\n` +
-        `• *Check-in:* ${checkIn} (2:00 PM)\n` +
-        `• *Check-out:* ${checkOut} (11:00 AM)\n` +
-        `• *Total de noches:* ${nights}\n` +
-        `• *Total referencial:* $${total} (Efectivo, Bs. tasa BCV o Binance — sujeto a 20% de descuento en temporada baja)\n` +
+        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:
+` +
+        `• *Personas:* ${count}
+` +
+        `• *Espacio:* ${currentOption.title}
+` +
+        `• *Check-in:* ${checkIn} (2:00 PM)
+` +
+        `• *Check-out:* ${checkOut} (11:00 AM)
+` +
+        `• *Total de noches:* ${nights}
+` +
+        `• *Total referencial:* $${total} (Efectivo, Bs. tasa BCV o Binance — abono del 50%: $${deposit})
+` +
         `• *Nombre:* ${name}`;
 
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
