@@ -21,7 +21,6 @@
       --text: #143635;
       --muted: #4b6b69;
       --border: #bfe3de;
-      --whatsapp: #25d366;
     }
 
     * { box-sizing: border-box; }
@@ -327,7 +326,7 @@
       color: var(--teal-deep);
     }
 
-    /* Botón CTA deshabilitado vs habilitado en verde */
+    /* Botón CTA: gris deshabilitado -> color títulos (--teal-ink #0d6e6a) con texto blanco al completar */
     .btn-wa {
       width: 100%;
       padding: 15px 18px;
@@ -337,21 +336,32 @@
       color: #6b7280;
       font-family: 'Fredoka', sans-serif;
       font-weight: 700;
-      font-size: 1.08rem;
+      font-size: 1.04rem;
       cursor: not-allowed;
       box-shadow: 0 4px 0 #9ca3af;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
       transition: transform 0.1s, background-color 0.2s, color 0.2s, box-shadow 0.2s;
     }
 
-    .btn-wa.ready {
-      background: var(--whatsapp);
-      color: #072914;
-      cursor: pointer;
-      box-shadow: 0 6px 0 #189e49;
+    .btn-wa svg {
+      width: 21px;
+      height: 21px;
+      fill: currentColor;
+      flex-shrink: 0;
     }
 
-    .btn-wa.ready:hover { filter: brightness(1.03); }
-    .btn-wa.ready:active { transform: translateY(3px); box-shadow: 0 3px 0 #189e49; }
+    .btn-wa.ready {
+      background: var(--teal-ink);
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 6px 0 var(--teal-deep);
+    }
+
+    .btn-wa.ready:hover { filter: brightness(1.06); }
+    .btn-wa.ready:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--teal-deep); }
 
     .footer-note {
       margin-top: 16px;
@@ -542,7 +552,12 @@
           </div>
         </div>
 
-        <button type="button" class="btn-wa" id="sendBtn" disabled>REALIZAR TU RESERVA AHORA</button>
+        <button type="button" class="btn-wa" id="sendBtn" disabled>
+          <span>Concreta tu reserva vía WhatsApp</span>
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M16.004 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.256.59 4.46 1.71 6.404L3.1 29.02l6.79-1.78a12.74 12.74 0 0 0 6.114 1.56h.006c7.058 0 12.796-5.74 12.796-12.8 0-3.42-1.332-6.636-3.75-9.054A12.716 12.716 0 0 0 16.004 3.2zm0 23.436h-.004a10.6 10.6 0 0 1-5.404-1.48l-.388-.23-4.03 1.056 1.076-3.928-.252-.402a10.586 10.586 0 0 1-1.628-5.652c0-5.862 4.77-10.632 10.636-10.632 2.84 0 5.51 1.108 7.516 3.116a10.562 10.562 0 0 1 3.112 7.52c0 5.864-4.772 10.632-10.634 10.632zm5.834-7.962c-.32-.16-1.892-.934-2.186-1.04-.292-.106-.506-.16-.72.16-.212.32-.824 1.04-1.01 1.254-.186.212-.372.24-.692.08-.32-.16-1.35-.498-2.572-1.588-.95-.848-1.592-1.894-1.778-2.214-.186-.32-.02-.492.14-.652.144-.144.32-.372.48-.558.16-.186.212-.32.32-.532.106-.214.052-.4-.026-.56-.08-.16-.72-1.734-.986-2.374-.26-.624-.524-.54-.72-.55l-.614-.01c-.212 0-.558.08-.852.4-.292.32-1.118 1.092-1.118 2.664s1.144 3.09 1.304 3.304c.16.212 2.252 3.44 5.456 4.822.762.33 1.356.526 1.82.674.766.244 1.462.21 2.012.128.614-.092 1.892-.774 2.158-1.52.266-.746.266-1.386.186-1.52-.08-.132-.292-.212-.612-.372z"/>
+          </svg>
+        </button>
       </div>
 
       <div class="footer-note">@micasitatortuga • Chichiriviche, Morrocoy</div>
@@ -629,14 +644,12 @@
       const datesReady = hasValidNights();
       const nameReady = nameVal.length > 0;
 
-      // Desplegar el recuadro de forma de pago una vez que eligió fechas y completó su nombre
       if (datesReady && nameReady) {
         paymentBox.classList.add('visible');
       } else {
         paymentBox.classList.remove('visible');
       }
 
-      // Habilitar botón verde SOLO cuando todo esté completo (personas, fechas válidas, nombre y método de pago)
       const allReady = Boolean(currentOption) && datesReady && nameReady && Boolean(selectedPayment);
       sendBtn.disabled = !allReady;
       if (allReady) {
@@ -753,14 +766,22 @@
       const checkOut = d2.toLocaleDateString('es-VE');
 
       const message =
-        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:\n` +
-        `• *Personas:* ${currentOption.label}\n` +
-        `• *Espacio:* ${currentOption.title}\n` +
-        `• *Check-in:* ${checkIn} (2:00 PM)\n` +
-        `• *Check-out:* ${checkOut} (11:00 AM)\n` +
-        `• *Total de noches:* ${nights}\n` +
-        `• *Total referencial:* $${total} (abono del 50%: $${deposit})\n` +
-        `• *Forma de pago elegida:* ${selectedPayment}\n` +
+        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:
+` +
+        `• *Personas:* ${currentOption.label}
+` +
+        `• *Espacio:* ${currentOption.title}
+` +
+        `• *Check-in:* ${checkIn} (2:00 PM)
+` +
+        `• *Check-out:* ${checkOut} (11:00 AM)
+` +
+        `• *Total de noches:* ${nights}
+` +
+        `• *Total referencial:* $${total} (abono del 50%: $${deposit})
+` +
+        `• *Forma de pago elegida:* ${selectedPayment}
+` +
         `• *Nombre:* ${name}`;
 
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
