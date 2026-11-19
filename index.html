@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reservas — Tu Casita de Playa en Chichiriviche</title>
+  <title>Reservas — Mi Casita Tortuga en Chichiriviche</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700&family=Pacifico&display=swap" rel="stylesheet" />
@@ -67,7 +67,7 @@
       text-align: center;
       font-family: 'Pacifico', cursive;
       color: var(--teal-ink);
-      font-size: 1.25rem;
+      font-size: 1.38rem;
       margin: 0 0 2px;
       line-height: 1.3;
     }
@@ -82,19 +82,24 @@
       line-height: 1.1;
     }
 
-    .brush-banner {
-      margin: 10px auto 18px;
-      display: inline-block;
-      background: linear-gradient(104deg, transparent 2%, var(--aqua) 4%, var(--aqua) 96%, transparent 98%);
-      padding: 5px 16px;
-      border-radius: 10px 18px 8px 16px;
-      font-family: 'Fredoka', sans-serif;
-      font-size: 0.92rem;
-      color: var(--teal-deep);
-      font-weight: 600;
+    .banner-wrap {
+      text-align: center;
+      margin: 11px 0 16px;
     }
 
-    .banner-wrap { text-align: center; }
+    .brush-banner {
+      display: inline-block;
+      max-width: 100%;
+      white-space: nowrap;
+      background: linear-gradient(104deg, transparent 1.5%, var(--aqua) 3.5%, var(--aqua) 96.5%, transparent 98.5%);
+      padding: 6px 18px;
+      border-radius: 10px 18px 8px 16px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(0.68rem, 3.05vw, 0.86rem);
+      color: var(--teal-deep);
+      font-weight: 600;
+      letter-spacing: -0.1px;
+    }
 
     .amenities-strip {
       display: flex;
@@ -109,14 +114,6 @@
       border-radius: 16px;
       padding: 10px 12px;
       margin-bottom: 18px;
-    }
-
-    .status {
-      font-size: 0.84rem;
-      color: var(--muted);
-      text-align: center;
-      margin-bottom: 14px;
-      font-weight: 600;
     }
 
     label {
@@ -481,10 +478,10 @@
 <body>
   <div class="card">
     <div class="content">
-      <p class="eyebrow">Tu Casita de Playa en</p>
+      <p class="eyebrow">Mi Casita Tortuga</p>
       <h1>CHICHIRIVICHE</h1>
       <div class="banner-wrap">
-        <div class="brush-banner">Cabañas Galápagos &amp; Carey • Mi Casita Tortuga</div>
+        <div class="brush-banner">Lo que incluimos para que te sientas en tu casita de la playa</div>
       </div>
 
       <div class="amenities-strip">
@@ -500,8 +497,6 @@
         <span>•</span>
         <span>Estacionamiento Privado</span>
       </div>
-
-      <div class="status" id="statusMsg">Sincronizando disponibilidad con el calendario...</div>
 
       <label for="guestCount">1. ¿Cuántas personas vienen?</label>
       <select id="guestCount">
@@ -713,18 +708,17 @@
     }
 
     async function loadCalendar() {
-      const status = document.getElementById('statusMsg');
       try {
         const res = await fetch(SCRIPT_URL);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         if (data.error) throw new Error(data.error);
         bookedData = data;
-        const gCount = (data.galapagos || []).length;
-        const cCount = (data.carey || []).length;
-        status.textContent = `Disponibilidad sincronizada (Galápagos: ${gCount} noches bloqueadas · Carey: ${cCount} noches bloqueadas).`;
+        if (currentOption) {
+          renderCalendarForOption();
+        }
       } catch (e) {
-        status.textContent = 'No se pudo cargar la disponibilidad: ' + e.message;
+        console.error('Error sincronizando calendario:', e);
       }
     }
 
