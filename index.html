@@ -363,16 +363,9 @@
       <label for="guestCount">1. ¿Cuántas personas vienen?</label>
       <select id="guestCount">
         <option value="" selected disabled>Elige la cantidad de personas</option>
-        <option value="1">1 persona</option>
-        <option value="2">2 personas</option>
-        <option value="3">3 personas</option>
-        <option value="4">4 personas</option>
-        <option value="5">5 personas</option>
-        <option value="6">6 personas</option>
-        <option value="7">7 personas</option>
-        <option value="8">8 personas</option>
-        <option value="9">9 personas</option>
-        <option value="10">10 personas</option>
+        <option value="galapagos">Hasta 4 personas</option>
+        <option value="carey">Hasta 6 personas</option>
+        <option value="posada">Hasta 10 personas</option>
       </select>
 
       <div class="calendar-section" id="calendarSection">
@@ -416,33 +409,32 @@
     let selectedDates = [];
     let picker;
 
-    function getOptionByGuests(count) {
-      if (count <= 4) {
-        return {
-          key: 'galapagos',
-          title: 'Cabaña Galápagos',
-          meta: 'Calendario asignado: hasta 4 personas',
-          price: 'Referencia: $60 por noche',
-          rate: 60
-        };
-      }
-      if (count <= 6) {
-        return {
-          key: 'carey',
-          title: 'Cabaña Carey',
-          meta: 'Calendario asignado: de 5 a 6 personas',
-          price: 'Referencia: $90 por noche',
-          rate: 90
-        };
-      }
-      return {
+    const OPTIONS_CONFIG = {
+      galapagos: {
+        key: 'galapagos',
+        label: 'Hasta 4 personas',
+        title: 'Cabaña Galápagos',
+        meta: 'Calendario asignado: hasta 4 personas',
+        price: 'Referencia: $60 por noche',
+        rate: 60
+      },
+      carey: {
+        key: 'carey',
+        label: 'Hasta 6 personas',
+        title: 'Cabaña Carey',
+        meta: 'Calendario asignado: hasta 6 personas',
+        price: 'Referencia: $90 por noche',
+        rate: 90
+      },
+      posada: {
         key: 'posada',
-        title: 'Toda la Posada (Ambas Cabañas)',
-        meta: 'Calendario asignado: de 7 a 10 personas',
+        label: 'Hasta 10 personas',
+        title: 'Posada Completa (Ambas Cabañas)',
+        meta: 'Calendario asignado: hasta 10 personas',
         price: 'Referencia: $150 por noche (Galápagos + Carey)',
         rate: 150
-      };
-    }
+      }
+    };
 
     function parseLocalDate(ymd) {
       const [y, m, d] = ymd.split('-').map(Number);
@@ -544,17 +536,16 @@
     }
 
     document.getElementById('guestCount').addEventListener('change', (e) => {
-      const count = parseInt(e.target.value, 10);
-      if (!count) return;
-      currentOption = getOptionByGuests(count);
+      const selectedKey = e.target.value;
+      if (!selectedKey || !OPTIONS_CONFIG[selectedKey]) return;
+      currentOption = OPTIONS_CONFIG[selectedKey];
       renderCalendarForOption();
     });
 
     document.getElementById('sendBtn').addEventListener('click', () => {
-      const count = document.getElementById('guestCount').value;
       const name = document.getElementById('guestName').value.trim() || 'No especificado';
 
-      if (!count || !currentOption) {
+      if (!currentOption) {
         alert('Primero selecciona la cantidad de personas.');
         return;
       }
@@ -575,7 +566,7 @@
       const message =
         `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:
 ` +
-        `• *Personas:* ${count}
+        `• *Personas:* ${currentOption.label}
 ` +
         `• *Espacio:* ${currentOption.title}
 ` +
