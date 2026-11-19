@@ -273,14 +273,21 @@
       line-height: 1.35;
     }
 
+    /* Leyenda dentro del calendario desplegable (se inserta desde flatpickr onReady) */
     .calendar-legend {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       align-items: center;
-      gap: 16px;
-      font-size: 0.82rem;
+      gap: 6px 16px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
       font-weight: 700;
       color: var(--muted);
-      margin: -8px 0 14px;
+      padding: 10px 12px 12px;
+      margin-top: 4px;
+      border-top: 1px solid var(--border);
+      width: 100%;
     }
 
     .legend-item {
@@ -644,10 +651,6 @@
 
         <label for="dateRange">2. Selecciona tus fechas, elige el día en que llegas y el día en que te vas</label>
         <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
-        <div class="calendar-legend">
-          <span class="legend-item"><span class="legend-box legend-available"></span> Disponible</span>
-          <span class="legend-item"><span class="legend-box legend-occupied"></span> Ocupado (no disponible)</span>
-        </div>
 
         <!-- Aviso condicional estricto: solo si eligió "Hasta 4 personas" (Galápagos),
              Galápagos está ocupada en esas fechas Y Cabaña Carey SÍ está libre -->
@@ -892,6 +895,15 @@
         locale: 'es',
         dateFormat: 'Y-m-d',
         disable: disabledRanges,
+        onReady: function(selectedDates, dateStr, fp) {
+          // Leyenda al pie del calendario desplegable
+          const legend = document.createElement('div');
+          legend.className = 'calendar-legend';
+          legend.innerHTML =
+            '<span class="legend-item"><span class="legend-box legend-available"></span> Disponible</span>' +
+            '<span class="legend-item"><span class="legend-box legend-occupied"></span> Ocupado (no disponible)</span>';
+          fp.calendarContainer.appendChild(legend);
+        },
         onDayCreate: function(dObj, dStr, fp, dayElem) {
           const dt = dayElem.dateObj;
           if (!dt) return;
