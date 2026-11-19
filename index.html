@@ -205,6 +205,39 @@
       line-height: 1.35;
     }
 
+    .calendar-legend {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin: -8px 0 14px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .legend-occupied {
+      background-color: #4b5563;
+      border: 1px solid #374151;
+    }
+
+    .legend-available {
+      background-color: #ffffff;
+      border: 1.5px solid var(--teal-ink);
+    }
+
     .summary {
       background: var(--cream);
       border: 1.5px solid var(--border);
@@ -280,10 +313,26 @@
       color: var(--teal-deep) !important;
     }
 
-    .flatpickr-day.disabled {
-      text-decoration: line-through;
-      color: var(--coral) !important;
-      opacity: 0.65;
+    /* Días pasados (anteriores a hoy) */
+    .flatpickr-day.prevMonthDay.flatpickr-disabled,
+    .flatpickr-day.flatpickr-disabled {
+      background-color: #e5e7eb !important;
+      border-color: #d1d5db !important;
+      color: #9ca3af !important;
+      cursor: not-allowed !important;
+    }
+
+    /* Fechas ocupadas / reservadas en gris oscuro opaco */
+    .flatpickr-day.booked-day,
+    .flatpickr-day.booked-day.flatpickr-disabled,
+    .flatpickr-day.booked-day:hover {
+      background-color: #4b5563 !important;
+      border-color: #374151 !important;
+      color: #f3f4f6 !important;
+      opacity: 0.88 !important;
+      text-decoration: line-through !important;
+      font-weight: 700 !important;
+      cursor: not-allowed !important;
     }
   </style>
 </head>
@@ -338,6 +387,10 @@
 
         <label for="dateRange">2. Selecciona tus fechas (Check-in / Check-out)</label>
         <input type="text" id="dateRange" placeholder="Toca aquí para elegir entrada y salida" readonly />
+        <div class="calendar-legend">
+          <span class="legend-item"><span class="legend-box legend-available"></span> Disponible</span>
+          <span class="legend-item"><span class="legend-box legend-occupied"></span> Ocupado (no disponible)</span>
+        </div>
 
         <label for="guestName">3. Tu nombre</label>
         <input type="text" id="guestName" placeholder="Ej. María Pérez" />
@@ -392,24 +445,42 @@
       };
     }
 
+    function parseLocalDate(ymd) {
+      const [y, m, d] = ymd.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function formatLocalDate(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
     function buildDisabledRanges(ranges) {
       return ranges.map(r => {
-        const startDate = new Date(r.start + 'T00:00:00');
-        const endDate = new Date(r.end + 'T00:00:00');
-        const lastNight = new Date(endDate.getTime() - 86400000);
+        const startDate = parseLocalDate(r.start);
+        const endDate = parseLocalDate(r.end);
+        const lastNight = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 1);
         if (lastNight < startDate) {
           return { from: r.start, to: r.start };
         }
-        const fmt = d => d.toISOString().slice(0, 10);
-        return { from: fmt(startDate), to: fmt(lastNight) };
+        return { from: formatLocalDate(startDate), to: formatLocalDate(lastNight) };
       });
+    }
+
+    function isDateInBookedRanges(dateObj, disabledRanges) {
+      const target = formatLocalDate(dateObj);
+      return disabledRanges.some(range => target >= range.from && target <= range.to);
     }
 
     function updateSummary() {
       const box = document.getElementById('summaryBox');
       if (selectedDates.length === 2 && currentOption) {
         const [d1, d2] = selectedDates;
-        const nights = Math.round((d2 - d1) / 86400000);
+        const t1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+        const t2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+        const nights = Math.round((t2 - t1) / 86400000);
         if (nights > 0) {
           const total = nights * currentOption.rate;
           box.innerHTML = `<strong>Espacio:</strong> ${currentOption.title}<br>` +
@@ -436,12 +507,20 @@
       selectedDates = [];
       updateSummary();
 
+      const disabledRanges = buildDisabledRanges(bookedData[currentOption.key] || []);
+
       picker = flatpickr('#dateRange', {
         mode: 'range',
         minDate: 'today',
         locale: 'es',
         dateFormat: 'Y-m-d',
-        disable: buildDisabledRanges(bookedData[currentOption.key] || []),
+        disable: disabledRanges,
+        onDayCreate: function(dObj, dStr, fp, dayElem) {
+          if (dayElem.dateObj && isDateInBookedRanges(dayElem.dateObj, disabledRanges)) {
+            dayElem.classList.add('booked-day');
+            dayElem.title = 'Fecha ocupada (no disponible)';
+          }
+        },
         onChange: function(dates) {
           selectedDates = dates;
           updateSummary();
@@ -453,12 +532,15 @@
       const status = document.getElementById('statusMsg');
       try {
         const res = await fetch(SCRIPT_URL);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         if (data.error) throw new Error(data.error);
         bookedData = data;
-        status.textContent = 'Disponibilidad sincronizada con el calendario.';
+        const gCount = (data.galapagos || []).length;
+        const cCount = (data.carey || []).length;
+        status.textContent = `Disponibilidad sincronizada (Galápagos: ${gCount} bloqueos · Carey: ${cCount} bloqueos).`;
       } catch (e) {
-        status.textContent = 'No se pudo cargar la disponibilidad; revisa la URL del script.';
+        status.textContent = 'No se pudo cargar la disponibilidad: ' + e.message;
       }
     }
 
@@ -483,26 +565,21 @@
       }
 
       const [d1, d2] = selectedDates;
-      const nights = Math.round((d2 - d1) / 86400000);
+      const t1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+      const t2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+      const nights = Math.round((t2 - t1) / 86400000);
       const total = nights * currentOption.rate;
       const checkIn = d1.toLocaleDateString('es-VE');
       const checkOut = d2.toLocaleDateString('es-VE');
 
       const message =
-        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:
-` +
-        `• *Personas:* ${count}
-` +
-        `• *Espacio:* ${currentOption.title}
-` +
-        `• *Check-in:* ${checkIn} (2:00 PM)
-` +
-        `• *Check-out:* ${checkOut} (11:00 AM)
-` +
-        `• *Total de noches:* ${nights}
-` +
-        `• *Total referencial:* $${total} (Efectivo, Bs. tasa BCV o Binance — sujeto a 20% de descuento en temporada baja)
-` +
+        `Hola, me gustaría confirmar mi reserva en *Mi Casita Tortuga*:\n` +
+        `• *Personas:* ${count}\n` +
+        `• *Espacio:* ${currentOption.title}\n` +
+        `• *Check-in:* ${checkIn} (2:00 PM)\n` +
+        `• *Check-out:* ${checkOut} (11:00 AM)\n` +
+        `• *Total de noches:* ${nights}\n` +
+        `• *Total referencial:* $${total} (Efectivo, Bs. tasa BCV o Binance — sujeto a 20% de descuento en temporada baja)\n` +
         `• *Nombre:* ${name}`;
 
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
