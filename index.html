@@ -224,12 +224,6 @@
       margin: 0 0 2px;
     }
 
-    .assigned-meta {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--teal-ink);
-    }
-
     .price-pill {
       display: inline-block;
       margin-top: 6px;
@@ -638,7 +632,6 @@
       <div class="calendar-section" id="calendarSection">
         <div class="assigned-box">
           <div class="assigned-title" id="assignedTitle"></div>
-          <div class="assigned-meta" id="assignedMeta"></div>
           <span class="price-pill" id="assignedPrice"></span>
           <div class="payment-note">Métodos de pago: en efectivo, en bolívares a tasa BCV o Binance.</div>
           <div class="promo-note">En temporada baja se ofrece un 20% de descuento</div>
@@ -872,7 +865,6 @@
       section.classList.add('visible');
 
       document.getElementById('assignedTitle').textContent = currentOption.title;
-      document.getElementById('assignedMeta').textContent = currentOption.meta;
       document.getElementById('assignedPrice').textContent = currentOption.price;
 
       if (picker) picker.destroy();
